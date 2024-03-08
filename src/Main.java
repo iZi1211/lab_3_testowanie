@@ -70,6 +70,32 @@ class StudentManagerTest {
         assert result : "Updating student is impossible because of wrong data";
     }
 
+    void testRemoveStudentSuccess() {
+        // Given
+        StudentManager studentManager = new StudentManager();
+       // Student student = new Student("John", "Doe", "123");
+        studentManager.addStudent("John","Doe","123");
+
+        // When
+        boolean result = studentManager.removeStudent("123");
+
+        // Then
+        assert result : "Remove student should be successful";
+        assert studentManager.getStudent("123") == null : "Student should be removed";
+    }
+
+
+    void testRemoveStudentNonexistent() {
+        // Given
+        StudentManager studentManager = new StudentManager();
+
+        // When
+        boolean result = studentManager.removeStudent("456");
+
+        // Then
+        assert result : "Removing nonexistent student should fail";
+    }
+
 }
 
 
@@ -113,7 +139,7 @@ class StudentManagerTest {
 
     public boolean addStudent(String name, String surname, String studentId) {
         if (students.containsKey(studentId)) {
-            return false; // Student with the same ID already exists
+            return false;
         }
 
         Student student = new Student(name, surname, studentId);
@@ -132,6 +158,15 @@ class StudentManagerTest {
         return true;
     }
 
+     public boolean removeStudent(String studentId) {
+         if (!students.containsKey(studentId)) {
+             return false;
+         }
+
+         students.remove(studentId);
+         return true;
+     }
+
 
      public Student getStudent(String studentId) {
          return students.get(studentId);
@@ -147,6 +182,8 @@ public class Main {
     //new StudentManagerTest().testUpdateStudentInvalidData();
     //new StudentManagerTest().testUpdateStudentSuccess();
     //new StudentManagerTest().testUpdateStudentNonExistingId();
+    //new StudentManagerTest().testRemoveStudentNonexistent();
+    //new StudentManagerTest().testRemoveStudentSuccess();
 
     }
 
