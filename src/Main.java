@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 class StudentManagerTest {
@@ -96,6 +94,30 @@ class StudentManagerTest {
         assert result : "Removing nonexistent student should fail";
     }
 
+    void testAddGradeSuccess() {
+        // Given
+        StudentManager studentManager = new StudentManager();
+        studentManager.addStudent("John","Doe","123");
+
+        // When
+        boolean result = studentManager.addGrade("123","Math",3.5);
+
+        // Then
+        assert result : "Adding grade should be successful";
+    }
+
+    void testAddGradeWrongSubject() {
+        // Given
+        StudentManager studentManager = new StudentManager();
+        studentManager.addStudent("John","Doe","123");
+
+        // When
+        boolean result = studentManager.addGrade("123",null,4.0);
+
+        // Then
+        assert result : "Adding should fail because of null subject";
+    }
+
 }
 
 
@@ -132,6 +154,7 @@ class StudentManagerTest {
  class StudentManager {
 
     private Map<String, Student> students;
+     private Map<String, Map<String, List<Double>>> grades = new HashMap<>();
 
     public StudentManager() {
         this.students = new HashMap<>();
@@ -167,6 +190,18 @@ class StudentManagerTest {
          return true;
      }
 
+     public boolean addGrade(String studentID, String subject, double grade) {
+         if (!students.containsKey(studentID)) {
+             return false;
+         } else if (subject == null) {
+             return false;
+         }
+
+         grades.computeIfAbsent(studentID, k -> new HashMap<>()).computeIfAbsent(subject, k -> new ArrayList<>()).add(grade);
+         return true;
+     }
+
+
 
      public Student getStudent(String studentId) {
          return students.get(studentId);
@@ -184,6 +219,8 @@ public class Main {
     //new StudentManagerTest().testUpdateStudentNonExistingId();
     //new StudentManagerTest().testRemoveStudentNonexistent();
     //new StudentManagerTest().testRemoveStudentSuccess();
+    //new StudentManagerTest().testAddGradeSuccess();
+   // new StudentManagerTest().testAddGradeWrongSubject();
 
     }
 
